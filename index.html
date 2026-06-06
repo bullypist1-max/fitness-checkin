@@ -100,7 +100,7 @@ function setView(v, m) {
 function getSelected() { return members.find(m => m.id === selected.id) || selected; }
 
 function filterList() {
-  const filtered = members.filter(m => m.name.toLowerCase().includes(searchVal.toLowerCase()));
+  const filtered = members.filter(m => m.name.toLowerCase().includes((window.searchVal||searchVal).toLowerCase()));
   const el = document.getElementById('list-items');
   const ct = document.getElementById('list-count');
   if (!el) return;
@@ -196,6 +196,7 @@ window.doSaveEdit = doSaveEdit;
 window.doDelete = doDelete;
 window.updateRemain = updateRemain;
 window.filterList = filterList;
+window.searchVal = searchVal;
 window.setView = setView;
 window.loadFromFirebase = loadFromFirebase;
 
@@ -203,7 +204,7 @@ function render() {
   const app = document.getElementById('app');
   if (!app) return;
   if (view === 'list') {
-    const filtered = members.filter(m => m.name.toLowerCase().includes(searchVal.toLowerCase()));
+    const filtered = members.filter(m => m.name.toLowerCase().includes((window.searchVal||searchVal).toLowerCase()));
     app.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <div><div style="font-family:Kanit;font-weight:900;font-size:22px">💪 FITNESS CHECK-IN</div>
@@ -214,7 +215,7 @@ function render() {
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:8px">
-        <input id="search-input" placeholder="🔍 ค้นหาสมาชิก..." value="${searchVal.replace(/"/g,'&quot;')}" oninput="searchVal=this.value;filterList()" />
+        <input id="search-input" placeholder="🔍 ค้นหาสมาชิก..." value="${searchVal.replace(/"/g,'&quot;')}" oninput="window.searchVal=this.value;window.filterList()" />
         <button class="btn-p" style="font-size:13px;padding:11px 16px" onclick="setView('addMember')">+ เพิ่ม</button>
       </div>
       <div id="list-count" style="color:#555;font-size:12px;margin-bottom:12px">แสดง ${filtered.length} คน</div>
