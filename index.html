@@ -74,13 +74,7 @@ var currentTab = 'home';
 function getTodayStr() { return new Date().toISOString().split('T')[0]; }
 function formatDateTH(d) {
   if (!d) return '';
-  var parts = d.split('-');
-  var year = parseInt(parts[0]);
-  var month = parseInt(parts[1]) - 1;
-  var day = parseInt(parts[2]);
-  // Fix weird years (should be 2020-2030 range)
-  if (year > 2100) year = year - 543;
-  var dt = new Date(year, month, day);
+  var dt = new Date(d + 'T00:00:00');
   return dt.toLocaleDateString('th-TH', {day:'numeric',month:'short',year:'numeric'});
 }
 
@@ -266,8 +260,12 @@ function renderDashboard() {
   var latestDate = '', latestName = '';
   members.forEach(function(m) {
     if (m.history.length > 0) {
-      var last = m.history[m.history.length-1];
-      if (last > latestDate) { latestDate = last; latestName = m.name; }
+      // Only consider valid dates (2020-2030)
+      var validDates = m.history.filter(function(d){ var y = parseInt(d.split('-')[0]); return y >= 2020 && y <= 2030; });
+      if (validDates.length > 0) {
+        var last = validDates[validDates.length-1];
+        if (last > latestDate) { latestDate = last; latestName = m.name; }
+      }
     }
   });
   var lowMembers = members.filter(function(m){ return (m.totalSessions - m.usedSessions) <= 3 && m.usedSessions > 0; });
