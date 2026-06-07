@@ -155,7 +155,7 @@ function render() {
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:8px">
-        <input id="search-input" placeholder="🔍 ค้นหาสมาชิก..." value="${searchVal.replace(/"/g,'&quot;')}" oninput="searchVal=this.value;filterList()" />
+        <input id="search-input" placeholder="🔍 ค้นหาสมาชิก..." value="${searchVal.replace(/"/g,'&quot;')}" oninput="window._search(this.value)" />
         <button class="btn-p" style="font-size:13px;padding:11px 16px" onclick="window._setView('addMember')">+ เพิ่ม</button>
       </div>
       <div id="list-count" style="color:#555;font-size:12px;margin-bottom:12px">แสดง ${filtered.length} คน</div>
@@ -317,6 +317,7 @@ window._delete = async function(id) {
   view = 'list'; render(); await save();
 };
 
+window._search = function(val) { searchVal = val; filterList(); };
 window._load();
 </script>
 </body>
